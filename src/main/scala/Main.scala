@@ -5,6 +5,8 @@ object Main {
     println(msg)
   }
 
+  List(1,2,3).map(_+1)
+
   def msg = "I was compiled by dotty :)"
 
 }
