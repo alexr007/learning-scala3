@@ -1,7 +1,6 @@
-package tcder
+package tcder.detailed
 
 import cats.syntax.all.*
-
 import scala.Tuple.Union
 import scala.compiletime as ct
 import scala.deriving.Mirror
@@ -27,9 +26,7 @@ object Decoder:
       case s: Mirror.SumOf[A]     => ???
       case p: Mirror.ProductOf[A] =>
         (raw: Map[String, String]) =>
-          // MirrorElemTypes = (String, Int)
-          // ParameterElemTypes = (Parameter[String], Parameter[Int])
-          type MPT = Tuple.Map[p.MirroredElemTypes, Parameter]
+          type MPT = Tuple.Map[p.MirroredElemTypes, Parameter] // (String, Int)
           val elemParameters: MPT = ct.summonAll[MPT]
           val elemNames: p.MirroredElemLabels = ct.constValueTuple[p.MirroredElemLabels]
           val es: List[Union[elemNames.type]] = elemNames.toList
