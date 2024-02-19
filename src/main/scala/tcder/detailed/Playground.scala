@@ -33,13 +33,20 @@ object Decoder:
           val ps: List[Union[elemParameters.type]] = elemParameters.toList
           val ts: List[(Union[elemNames.type], Union[elemParameters.type])] = es zip ps
           val tst: List[(String, Parameter[_])] = ts.asInstanceOf[List[(String, Parameter[?])]]
-          val mt = tst.map { case (name, param) => raw.get(name).flatMap(param.decode) }
-          mt.sequence
+          val mt = tst.map { case (name, param) =>
+            val t1: String = name
+            val t2: Parameter[_] = param
+            val value: Option[String] = raw.get(name)            // maybe we have a key
+            val decoded: Option[?] = value.flatMap(param.decode) // maybe we can decode it successfully
+            decoded
+          }
+          val x = mt.sequence
             .map(v =>
               p.fromTuple(
                 Tuple.fromArray(v.toArray).asInstanceOf[p.MirroredElemTypes]
               )
             )
+          x
 
 final case class User(name: String, score: Int) derives Decoder
 

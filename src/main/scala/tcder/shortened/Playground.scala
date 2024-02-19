@@ -38,7 +38,12 @@ object Decoder:
 
 final case class User(name: String, score: Int) derives Decoder
 
-@main def main() =
+@main def entrypoint() =
+  // r
   val raw = Map("name" -> "Tom", "score" -> "24")
-  println(summon[Decoder[User]].decode(raw))
-  println(Decoder.derived[User].decode(raw))
+
+  val d1: Decoder[User] = summon[Decoder[User]] // implicitly
+  pprint.log(d1.decode(raw))
+
+  val d2: Decoder[User] = Decoder.derived[User] // direct macro call
+  pprint.log(d2.decode(raw))
